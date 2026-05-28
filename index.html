@@ -1,0 +1,332 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>SurakshaPath | Smart Safety & Tactical Route Planner</title>
+  <!-- Google Fonts: Outfit -->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;600;800&family=Space+Grotesk:wght@400;700&display=swap" rel="stylesheet">
+  <!-- Lucide Icons -->
+  <script src="https://unpkg.com/lucide@latest"></script>
+  <link rel="stylesheet" href="style.css">
+</head>
+<body>
+
+  <!-- SOS Screen Overlay (Flashes Red on SOS Active) -->
+  <div id="sosOverlay" class="sos-overlay hidden">
+    <div class="sos-content">
+      <div class="alert-pulse-large"><i data-lucide="shield-alert" class="icon-danger animate-pulse"></i></div>
+      <h1>EMERGENCY SOS INITIATED</h1>
+      <p class="blink">BROADCASTING LIVE COORDINATES & AUDIO ALARM ACTIVE</p>
+      
+      <div class="dispatch-status">
+        <div class="progress-bar">
+          <div class="progress-fill"></div>
+        </div>
+        <p id="dispatchText">Dispatching local safety guards & emergency services...</p>
+      </div>
+
+      <div class="sos-coordinates">
+        <span>LAT: 28.6139° N</span> | <span>LNG: 77.2090° E</span> (Accuracy: ±3m)
+      </div>
+
+      <button id="cancelSosBtn" class="btn btn-secondary btn-cancel">Deactivate Alarm & SOS</button>
+    </div>
+  </div>
+
+  <!-- Fake Call Fullscreen Overlay -->
+  <div id="fakeCallOverlay" class="fake-call-overlay hidden">
+    <div class="incoming-call-screen">
+      <div class="caller-info">
+        <div class="caller-avatar">
+          <i data-lucide="user" class="avatar-icon"></i>
+        </div>
+        <h2 id="callerNameText">Dad</h2>
+        <p>Incoming Call...</p>
+      </div>
+
+      <div class="call-controls">
+        <button id="declineCallBtn" class="call-btn decline-btn">
+          <i data-lucide="phone-off"></i>
+          <span>Decline</span>
+        </button>
+        <button id="acceptCallBtn" class="call-btn accept-btn">
+          <i data-lucide="phone"></i>
+          <span>Accept</span>
+        </button>
+      </div>
+    </div>
+
+    <!-- Active Call Screen (shown when user accepts) -->
+    <div class="active-call-screen hidden" id="activeCallScreen">
+      <div class="caller-info">
+        <h2>Dad</h2>
+        <p id="callTimer">00:00</p>
+      </div>
+      <div class="call-actions-grid">
+        <div class="action-circle"><i data-lucide="mic-off"></i></div>
+        <div class="action-circle"><i data-lucide="grid"></i></div>
+        <div class="action-circle"><i data-lucide="volume-2"></i></div>
+        <div class="action-circle"><i data-lucide="plus"></i></div>
+        <div class="action-circle"><i data-lucide="video"></i></div>
+        <div class="action-circle"><i data-lucide="users"></i></div>
+      </div>
+      <button id="hangUpCallBtn" class="call-btn hangup-btn">
+        <i data-lucide="phone-off"></i>
+        <span>End Call</span>
+      </button>
+    </div>
+  </div>
+
+  <!-- Main App Layout -->
+  <div class="app-container">
+    
+    <!-- Top Header -->
+    <header class="app-header">
+      <div class="brand">
+        <div class="logo-wrapper">
+          <i data-lucide="shield" class="logo-icon"></i>
+          <span class="logo-pulse"></span>
+        </div>
+        <div class="brand-text">
+          <h1>SurakshaPath</h1>
+          <p>Tactical Emergency Companion</p>
+        </div>
+      </div>
+      <div class="header-status">
+        <div class="status-indicator safe"></div>
+        <span>Live Safety Sync: Online</span>
+      </div>
+    </header>
+
+    <main class="dashboard-grid">
+      
+      <!-- Left Panel: Navigation & Controls -->
+      <section class="control-panel panel-glass">
+        
+        <!-- Big SOS Panel -->
+        <div class="sos-card">
+          <h2>Distress Alert</h2>
+          <p>Press the trigger to notify emergency contacts & sound siren alarm</p>
+          <button id="triggerSosBtn" class="sos-trigger-btn">
+            <span class="pulse-ring-1"></span>
+            <span class="pulse-ring-2"></span>
+            <span class="btn-inner">
+              <i data-lucide="alert-octagon"></i>
+              <span>TRIGGER SOS</span>
+            </span>
+          </button>
+        </div>
+
+        <!-- Safe Route Planner -->
+        <div class="tool-card">
+          <div class="card-header">
+            <i data-lucide="navigation" class="text-primary"></i>
+            <h3>Safe Route Planner</h3>
+          </div>
+          <div class="form-group">
+            <label for="routeStart">Current Location</label>
+            <div class="input-wrapper">
+              <i data-lucide="map-pin" class="input-icon text-success"></i>
+              <input type="text" id="routeStart" value="Sector 62 (Metro Hub)" placeholder="Enter starting point">
+            </div>
+          </div>
+          <div class="form-group">
+            <label for="routeEnd">Destination</label>
+            <div class="input-wrapper">
+              <i data-lucide="flag" class="input-icon text-danger"></i>
+              <input type="text" id="routeEnd" value="Tech Zone Park" placeholder="Enter destination">
+            </div>
+          </div>
+          <button id="calculateRouteBtn" class="btn btn-primary btn-full">
+            <i data-lucide="search"></i>
+            Find Safest Route
+          </button>
+        </div>
+
+        <!-- Fake Call Shield -->
+        <div class="tool-card">
+          <div class="card-header">
+            <i data-lucide="phone-call" class="text-warning"></i>
+            <h3>Fake Call Shield</h3>
+          </div>
+          <p class="tool-desc">Trigger a realistic phone call to exit unsafe/uncomfortable situations.</p>
+          
+          <div class="form-group-row">
+            <div class="form-group flex-1">
+              <label for="callerName">Caller Identity</label>
+              <select id="callerName">
+                <option value="Dad">Dad</option>
+                <option value="Mom">Mom</option>
+                <option value="Brother">Brother</option>
+                <option value="Security Office">Security Office</option>
+              </select>
+            </div>
+            <div class="form-group flex-1">
+              <label for="callDelay">Trigger Delay</label>
+              <select id="callDelay">
+                <option value="3">3 Seconds</option>
+                <option value="5" selected>5 Seconds</option>
+                <option value="15">15 Seconds</option>
+                <option value="30">30 Seconds</option>
+              </select>
+            </div>
+          </div>
+
+          <button id="scheduleCallBtn" class="btn btn-warning btn-full">
+            <i data-lucide="shield-alert"></i>
+            <span id="callBtnText">Activate Call Shield</span>
+          </button>
+        </div>
+
+      </section>
+
+      <!-- Center & Right Panel: Map & Dashboard Data -->
+      <section class="map-and-stats">
+        
+        <!-- Live Map Interface -->
+        <div class="map-card panel-glass">
+          <div class="map-header">
+            <div class="map-title">
+              <i data-lucide="map" class="text-primary"></i>
+              <h3>Tactical Safety Map Dashboard</h3>
+            </div>
+            <div class="map-legends">
+              <span class="legend"><span class="dot safe"></span> Safe (Lighted)</span>
+              <span class="legend"><span class="dot moderate"></span> Caution</span>
+              <span class="legend"><span class="dot dangerous"></span> Unlit/Reported</span>
+            </div>
+          </div>
+
+          <div class="map-viewport" id="mapViewport">
+            <!-- Grid overlays to look tactical -->
+            <div class="tactical-grid"></div>
+            
+            <!-- SVG Map Layers: Streets, Safe Zones, Active Paths -->
+            <svg id="mapSvg" viewBox="0 0 800 500" class="map-svg">
+              <!-- Base Street Grid Lines -->
+              <path d="M 50,0 L 50,500" class="street-line" />
+              <path d="M 200,0 L 200,500" class="street-line" />
+              <path d="M 350,0 L 350,500" class="street-line" />
+              <path d="M 500,0 L 500,500" class="street-line" />
+              <path d="M 650,0 L 650,500" class="street-line" />
+              
+              <path d="M 0,80 L 800,80" class="street-line" />
+              <path d="M 0,220 L 800,220" class="street-line" />
+              <path d="M 0,360 L 800,360" class="street-line" />
+              
+              <!-- Diagonals / Extra roads -->
+              <path d="M 50,80 L 350,360" class="street-line diagonal" />
+              <path d="M 350,220 L 650,80" class="street-line diagonal" />
+              
+              <!-- Hotspots/Heatmap Circles -->
+              <circle cx="120" cy="150" r="45" class="heatmap-zone hazard" />
+              <circle cx="580" cy="290" r="55" class="heatmap-zone hazard" />
+              <circle cx="280" cy="300" r="60" class="heatmap-zone moderate" />
+              <circle cx="420" cy="110" r="70" class="heatmap-zone safe" />
+              
+              <!-- Safe Haven Safehouses (Green circles) -->
+              <g class="map-node safehouse" data-info="Police Booth & CCTV Station">
+                <circle cx="200" cy="220" r="14" />
+                <circle cx="200" cy="220" r="24" class="ping" />
+                <text x="200" y="225" text-anchor="middle" class="node-icon">👮</text>
+              </g>
+              <g class="map-node safehouse" data-info="24/7 Supermarket (Safe Haven)">
+                <circle cx="500" cy="80" r="14" />
+                <circle cx="500" cy="80" r="24" class="ping" />
+                <text x="500" y="85" text-anchor="middle" class="node-icon">🏪</text>
+              </g>
+              <g class="map-node safehouse" data-info="Active Transit Police Hub">
+                <circle cx="350" cy="360" r="14" />
+                <circle cx="350" cy="360" r="24" class="ping" />
+                <text x="350" y="365" text-anchor="middle" class="node-icon">🚓</text>
+              </g>
+
+              <!-- Starting Point Marker -->
+              <g id="startMarker" class="map-marker hidden">
+                <circle cx="50" cy="80" r="8" class="marker-base success" />
+                <circle cx="50" cy="80" r="18" class="marker-pulse success" />
+                <text x="50" y="60" text-anchor="middle" class="marker-label">START</text>
+              </g>
+
+              <!-- Ending Point Marker -->
+              <g id="endMarker" class="map-marker hidden">
+                <circle cx="650" cy="360" r="8" class="marker-base danger" />
+                <circle cx="650" cy="360" r="18" class="marker-pulse danger" />
+                <text x="650" y="340" text-anchor="middle" class="marker-label">DEST</text>
+              </g>
+
+              <!-- Dynamic Calculated Path Line -->
+              <path id="calculatedPath" d="" class="dynamic-path-line" />
+              
+              <!-- Live User Location Indicator -->
+              <g id="userLocation" class="user-location-node">
+                <circle cx="50" cy="80" r="6" />
+                <circle cx="50" cy="80" r="16" class="user-ping" />
+              </g>
+
+              <!-- Interactive reported points container -->
+              <g id="reportedPins"></g>
+            </svg>
+
+            <!-- Floating Info Panel / Tooltip -->
+            <div id="mapTooltip" class="map-tooltip hidden">
+              Hover over markers for safe havens or hazards
+            </div>
+          </div>
+        </div>
+
+        <!-- Info Grid / Safety Metrics -->
+        <div class="safety-dashboard-grid">
+          
+          <div class="stat-card panel-glass">
+            <div class="stat-icon-wrapper success">
+              <i data-lucide="shield-check"></i>
+            </div>
+            <div class="stat-details">
+              <h4>Safety Index</h4>
+              <p class="stat-value text-success" id="safetyScore">94%</p>
+              <p class="stat-subtitle">Based on active path attributes</p>
+            </div>
+          </div>
+
+          <div class="stat-card panel-glass">
+            <div class="stat-icon-wrapper info">
+              <i data-lucide="eye"></i>
+            </div>
+            <div class="stat-details">
+              <h4>Active Vigilance</h4>
+              <p class="stat-value text-info">12 Guards</p>
+              <p class="stat-subtitle">Patrolling route buffers</p>
+            </div>
+          </div>
+
+          <!-- Report Incident Panel -->
+          <div class="stat-card panel-glass flex-column">
+            <div class="reporter-header">
+              <i data-lucide="megaphone" class="text-danger"></i>
+              <h4>Report Safety Hazard</h4>
+            </div>
+            <div class="reporter-form-row">
+              <select id="reportType" class="flex-1">
+                <option value="light">No Street Lights</option>
+                <option value="crowd">Suspicious Crowd</option>
+                <option value="barrier">Blocked / Isolated Road</option>
+                <option value="other">Other Concern</option>
+              </select>
+              <button id="addReportPinBtn" class="btn btn-secondary">Pin on Map</button>
+            </div>
+          </div>
+
+        </div>
+
+      </section>
+
+    </main>
+  </div>
+
+  <script src="app.js"></script>
+</body>
+</html>
