@@ -3,23 +3,162 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>SurakshaPath | Smart Safety & Tactical Route Planner</title>
-  <!-- Google Fonts: Outfit -->
+  <title>SurakshaPath | UP Police & Citizen Platform</title>
+  <!-- Google Fonts: Outfit & Space Grotesk -->
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-  <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;600;800&family=Space+Grotesk:wght@400;700&display=swap" rel="stylesheet">
+  <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;600;700;800&family=Space+Grotesk:wght@400;500;700&display=swap" rel="stylesheet">
   <!-- Lucide Icons -->
   <script src="https://unpkg.com/lucide@latest"></script>
   <link rel="stylesheet" href="style.css">
 </head>
 <body>
 
-  <!-- SOS Screen Overlay (Flashes Red on SOS Active) -->
+  <!-- ========================================== -->
+  <!-- 1. LOGIN / ROLE SELECTION SCREEN          -->
+  <!-- ========================================== -->
+  <div id="loginScreen" class="login-screen">
+    <div class="login-card">
+      <div class="logo-large">
+        <i data-lucide="shield-check" class="brand-logo-icon"></i>
+      </div>
+      <h2>SurakshaPath</h2>
+      <p class="subtitle">Official UP Citizen & Police Training Portal</p>
+      
+      <!-- Authentication Tabs -->
+      <div class="auth-tabs">
+        <button id="tabSignIn" class="auth-tab active">Sign In</button>
+        <button id="tabSignUp" class="auth-tab">Create Account</button>
+      </div>
+
+      <!-- Sign In Form Container -->
+      <div id="loginFormContainer" class="auth-form-container">
+        <form id="signInForm" onsubmit="return false;">
+          <div class="form-group text-left">
+            <label for="loginEmail">Email Address</label>
+            <div class="input-wrapper">
+              <i data-lucide="mail" class="input-icon"></i>
+              <input type="email" id="loginEmail" placeholder="Enter your email" required>
+            </div>
+          </div>
+          
+          <div class="form-group text-left">
+            <label for="loginPassword">Password</label>
+            <div class="input-wrapper">
+              <i data-lucide="lock" class="input-icon"></i>
+              <input type="password" id="loginPassword" placeholder="Enter password" required>
+            </div>
+          </div>
+
+          <div class="form-group text-left">
+            <label>Select Portal Access Level</label>
+            <div class="role-selector-row">
+              <div class="role-select-card active" data-auth-role="citizen">
+                <i data-lucide="users"></i>
+                <span>For Citizens</span>
+              </div>
+              <div class="role-select-card" data-auth-role="police">
+                <i data-lucide="shield"></i>
+                <span>For Police</span>
+              </div>
+              <div class="role-select-card" data-auth-role="admin">
+                <i data-lucide="key-round"></i>
+                <span>For Admin</span>
+              </div>
+            </div>
+          </div>
+
+          <div id="loginErrorMsg" class="auth-error-msg hidden"></div>
+
+          <button type="submit" id="submitLoginBtn" class="btn btn-primary btn-full mt-15">
+            <i data-lucide="log-in"></i> Sign In to Portal
+          </button>
+        </form>
+
+        <div class="auth-divider">
+          <span>Or Quick Demo Login</span>
+        </div>
+
+        <div class="quick-login-grid">
+          <button class="quick-login-btn citizen" id="quickLoginCitizen">
+            <i data-lucide="users"></i>
+            <span>Citizen Demo</span>
+          </button>
+          <button class="quick-login-btn police" id="quickLoginPolice">
+            <i data-lucide="shield"></i>
+            <span>Police Demo</span>
+          </button>
+          <button class="quick-login-btn admin" id="quickLoginAdmin">
+            <i data-lucide="key-round"></i>
+            <span>Admin Demo</span>
+          </button>
+        </div>
+      </div>
+
+      <!-- Sign Up Form Container -->
+      <div id="signupFormContainer" class="auth-form-container hidden">
+        <form id="signUpForm" onsubmit="return false;">
+          <div class="form-group text-left">
+            <label for="signupName">Full Name</label>
+            <div class="input-wrapper">
+              <i data-lucide="user" class="input-icon"></i>
+              <input type="text" id="signupName" placeholder="Enter your full name" required>
+            </div>
+          </div>
+
+          <div class="form-group text-left">
+            <label for="signupEmail">Email Address</label>
+            <div class="input-wrapper">
+              <i data-lucide="mail" class="input-icon"></i>
+              <input type="email" id="signupEmail" placeholder="Enter your email" required>
+            </div>
+          </div>
+          
+          <div class="form-group text-left">
+            <label for="signupPassword">Password</label>
+            <div class="input-wrapper">
+              <i data-lucide="lock" class="input-icon"></i>
+              <input type="password" id="signupPassword" placeholder="Choose a password" required>
+            </div>
+          </div>
+
+          <div class="form-group text-left">
+            <label>Select Your Account Type</label>
+            <div class="role-selector-row">
+              <div class="role-select-card active" data-signup-role="citizen">
+                <i data-lucide="users"></i>
+                <span>For Citizens</span>
+              </div>
+              <div class="role-select-card" data-signup-role="police">
+                <i data-lucide="shield"></i>
+                <span>For Police</span>
+              </div>
+            </div>
+          </div>
+
+          <div id="signupErrorMsg" class="auth-error-msg hidden"></div>
+          <div id="signupSuccessMsg" class="auth-success-msg hidden"></div>
+
+          <button type="submit" id="submitSignupBtn" class="btn btn-warning btn-full mt-15">
+            <i data-lucide="user-plus"></i> Create Account
+          </button>
+        </form>
+      </div>
+
+      <div class="login-footer">
+        <p>🚨 In Case of Real Emergency, Call 112 / 1090 Directly</p>
+      </div>
+    </div>
+  </div>
+
+  <!-- ========================================== -->
+  <!-- SOS SCREEN OVERLAY (Global Action)         -->
+  <!-- ========================================== -->
   <div id="sosOverlay" class="sos-overlay hidden">
     <div class="sos-content">
       <div class="alert-pulse-large"><i data-lucide="shield-alert" class="icon-danger animate-pulse"></i></div>
       <h1>EMERGENCY SOS INITIATED</h1>
-      <p class="blink">BROADCASTING LIVE COORDINATES & AUDIO ALARM ACTIVE</p>
+      <p class="blink text-danger">BROADCASTING GPS TO CLOSEST POLICE STATION</p>
       
       <div class="dispatch-status">
         <div class="progress-bar">
@@ -29,14 +168,16 @@
       </div>
 
       <div class="sos-coordinates">
-        <span>LAT: 28.6139° N</span> | <span>LNG: 77.2090° E</span> (Accuracy: ±3m)
+        <span>LAT: 26.8467° N</span> | <span>LNG: 80.9462° E</span> (UP Police HQ, Lucknow Reference)
       </div>
 
-      <button id="cancelSosBtn" class="btn btn-secondary btn-cancel">Deactivate Alarm & SOS</button>
+      <button id="cancelSosBtn" class="btn btn-secondary btn-cancel">Deactivate SOS Alarm</button>
     </div>
   </div>
 
-  <!-- Fake Call Fullscreen Overlay -->
+  <!-- ========================================== -->
+  <!-- FAKE CALL SCREEN OVERLAY (Citizen Help)    -->
+  <!-- ========================================== -->
   <div id="fakeCallOverlay" class="fake-call-overlay hidden">
     <div class="incoming-call-screen">
       <div class="caller-info">
@@ -46,7 +187,6 @@
         <h2 id="callerNameText">Dad</h2>
         <p>Incoming Call...</p>
       </div>
-
       <div class="call-controls">
         <button id="declineCallBtn" class="call-btn decline-btn">
           <i data-lucide="phone-off"></i>
@@ -59,7 +199,7 @@
       </div>
     </div>
 
-    <!-- Active Call Screen (shown when user accepts) -->
+    <!-- Active Call Screen -->
     <div class="active-call-screen hidden" id="activeCallScreen">
       <div class="caller-info">
         <h2>Dad</h2>
@@ -80,10 +220,12 @@
     </div>
   </div>
 
-  <!-- Main App Layout -->
-  <div class="app-container">
+  <!-- ========================================== -->
+  <!-- MAIN WORKSPACE PLATFORM CONTAINER         -->
+  <!-- ========================================== -->
+  <div class="app-container hidden" id="appContainer">
     
-    <!-- Top Header -->
+    <!-- Header -->
     <header class="app-header">
       <div class="brand">
         <div class="logo-wrapper">
@@ -92,239 +234,556 @@
         </div>
         <div class="brand-text">
           <h1>SurakshaPath</h1>
-          <p>Tactical Emergency Companion</p>
+          <p id="userRoleSub">UP Police-Citizen Integration</p>
         </div>
       </div>
-      <div class="header-status">
-        <div class="status-indicator safe"></div>
-        <span>Live Safety Sync: Online</span>
+      
+      <!-- Center Navigation Tabs (Controlled by active role) -->
+      <nav class="nav-tabs" id="navTabsContainer">
+        <!-- Rendered dynamically by javascript -->
+      </nav>
+
+      <!-- Logout Profile Bar -->
+      <div class="profile-actions">
+        <div class="role-badge" id="roleBadge">
+          <i data-lucide="user" class="badge-icon"></i>
+          <span id="roleBadgeText">Citizen</span>
+        </div>
+        <button id="logoutBtn" class="btn btn-logout" title="Log Out">
+          <i data-lucide="log-out"></i>
+        </button>
       </div>
     </header>
 
-    <main class="dashboard-grid">
+    <!-- ========================================== -->
+    <!-- CITIZEN DASHBOARD                          -->
+    <!-- ========================================== -->
+    <div id="citizenDashboard" class="dashboard-view hidden">
       
-      <!-- Left Panel: Navigation & Controls -->
-      <section class="control-panel panel-glass">
-        
-        <!-- Big SOS Panel -->
-        <div class="sos-card">
-          <h2>Distress Alert</h2>
-          <p>Press the trigger to notify emergency contacts & sound siren alarm</p>
-          <button id="triggerSosBtn" class="sos-trigger-btn">
-            <span class="pulse-ring-1"></span>
-            <span class="pulse-ring-2"></span>
-            <span class="btn-inner">
-              <i data-lucide="alert-octagon"></i>
-              <span>TRIGGER SOS</span>
-            </span>
-          </button>
+      <!-- TAB 1: SAFETY MAP & SOS -->
+      <div id="citizen-safety-tab" class="tab-content">
+        <div class="dashboard-grid">
+          <!-- Control Panel -->
+          <section class="control-panel panel-glass">
+            <div class="sos-card">
+              <h2>Distress Alert</h2>
+              <p>Press the trigger to notify emergency contacts & sound siren alarm</p>
+              <button id="triggerSosBtn" class="sos-trigger-btn">
+                <span class="pulse-ring-1"></span>
+                <span class="pulse-ring-2"></span>
+                <span class="btn-inner">
+                  <i data-lucide="alert-octagon"></i>
+                  <span>TRIGGER SOS</span>
+                </span>
+              </button>
+            </div>
+
+            <!-- Route Planner -->
+            <div class="tool-card">
+              <div class="card-header">
+                <i data-lucide="navigation" class="text-primary"></i>
+                <h3>Safe Route Planner</h3>
+              </div>
+              <div class="form-group">
+                <label for="routeStart">Current Location</label>
+                <div class="input-wrapper">
+                  <i data-lucide="map-pin" class="input-icon text-success"></i>
+                  <input type="text" id="routeStart" value="Sector 62 (Metro Hub)">
+                </div>
+              </div>
+              <div class="form-group">
+                <label for="routeEnd">Destination</label>
+                <div class="input-wrapper">
+                  <i data-lucide="flag" class="input-icon text-danger"></i>
+                  <input type="text" id="routeEnd" value="Tech Zone Park">
+                </div>
+              </div>
+              <button id="calculateRouteBtn" class="btn btn-primary btn-full">
+                <i data-lucide="search"></i>
+                Find Safest Route
+              </button>
+            </div>
+
+            <!-- Fake Call Generator -->
+            <div class="tool-card">
+              <div class="card-header">
+                <i data-lucide="phone-call" class="text-warning"></i>
+                <h3>Fake Call Shield</h3>
+              </div>
+              <div class="form-group-row">
+                <div class="form-group flex-1">
+                  <label for="callerName">Caller Identity</label>
+                  <select id="callerName">
+                    <option value="Dad">Dad</option>
+                    <option value="Mom">Mom</option>
+                    <option value="Brother">Brother</option>
+                    <option value="UP Police Desk">UP Police Helpline</option>
+                  </select>
+                </div>
+                <div class="form-group flex-1">
+                  <label for="callDelay">Delay</label>
+                  <select id="callDelay">
+                    <option value="3">3 Seconds</option>
+                    <option value="5" selected>5 Seconds</option>
+                    <option value="15">15 Seconds</option>
+                  </select>
+                </div>
+              </div>
+              <button id="scheduleCallBtn" class="btn btn-warning btn-full">
+                <i data-lucide="phone"></i>
+                <span id="callBtnText">Schedule Fake Call</span>
+              </button>
+            </div>
+          </section>
+
+          <!-- Map and Stats -->
+          <section class="map-and-stats">
+            <div class="map-card panel-glass">
+              <div class="map-header">
+                <div class="map-title">
+                  <i data-lucide="map" class="text-primary"></i>
+                  <h3>Tactical Safety Map Dashboard</h3>
+                </div>
+                <div class="map-legends">
+                  <span class="legend"><span class="dot safe"></span> Safe Haven</span>
+                  <span class="legend"><span class="dot moderate"></span> Caution</span>
+                  <span class="legend"><span class="dot dangerous"></span> Hazard</span>
+                </div>
+              </div>
+              <div class="map-viewport" id="mapViewport">
+                <div class="tactical-grid"></div>
+                <svg id="mapSvg" viewBox="0 0 800 500" class="map-svg">
+                  <!-- Base Streets -->
+                  <path d="M 50,0 L 50,500" class="street-line" />
+                  <path d="M 200,0 L 200,500" class="street-line" />
+                  <path d="M 350,0 L 350,500" class="street-line" />
+                  <path d="M 500,0 L 500,500" class="street-line" />
+                  <path d="M 650,0 L 650,500" class="street-line" />
+                  <path d="M 0,80 L 800,80" class="street-line" />
+                  <path d="M 0,220 L 800,220" class="street-line" />
+                  <path d="M 0,360 L 800,360" class="street-line" />
+                  <!-- Diagonals -->
+                  <path d="M 50,80 L 350,360" class="street-line diagonal" />
+                  <path d="M 350,220 L 650,80" class="street-line diagonal" />
+                  <!-- Zones -->
+                  <circle cx="120" cy="150" r="45" class="heatmap-zone hazard" />
+                  <circle cx="580" cy="290" r="55" class="heatmap-zone hazard" />
+                  <circle cx="280" cy="300" r="60" class="heatmap-zone moderate" />
+                  <circle cx="420" cy="110" r="70" class="heatmap-zone safe" />
+                  
+                  <!-- Safehouses -->
+                  <g class="map-node safehouse" data-info="Police Booth & CCTV Center">
+                    <circle cx="200" cy="220" r="14" />
+                    <circle cx="200" cy="220" r="24" class="ping" />
+                    <text x="200" y="225" text-anchor="middle" class="node-icon">👮</text>
+                  </g>
+                  <g class="map-node safehouse" data-info="24/7 Citizen Safe Haven Shop">
+                    <circle cx="500" cy="80" r="14" />
+                    <circle cx="500" cy="80" r="24" class="ping" />
+                    <text x="500" y="85" text-anchor="middle" class="node-icon">🏪</text>
+                  </g>
+                  <g class="map-node safehouse" data-info="UP Police Active Patrol Hub">
+                    <circle cx="350" cy="360" r="14" />
+                    <circle cx="350" cy="360" r="24" class="ping" />
+                    <text x="350" y="365" text-anchor="middle" class="node-icon">🚓</text>
+                  </g>
+
+                  <!-- Paths -->
+                  <path id="calculatedPath" d="" class="dynamic-path-line" />
+                  <!-- Markers -->
+                  <g id="startMarker" class="map-marker hidden">
+                    <circle cx="50" cy="80" r="8" class="marker-base success" />
+                    <circle cx="50" cy="80" r="18" class="marker-pulse success" />
+                  </g>
+                  <g id="endMarker" class="map-marker hidden">
+                    <circle cx="650" cy="360" r="8" class="marker-base danger" />
+                    <circle cx="650" cy="360" r="18" class="marker-pulse danger" />
+                  </g>
+                  <g id="userLocation" class="user-location-node">
+                    <circle cx="50" cy="80" r="6" />
+                    <circle cx="50" cy="80" r="16" class="user-ping" />
+                  </g>
+                  <g id="reportedPins"></g>
+                </svg>
+                <div id="mapTooltip" class="map-tooltip hidden">Hover info</div>
+              </div>
+            </div>
+
+            <!-- Stats & Reporting -->
+            <div class="safety-dashboard-grid">
+              <div class="stat-card panel-glass">
+                <div class="stat-icon-wrapper success"><i data-lucide="shield-check"></i></div>
+                <div class="stat-details">
+                  <h4>Safety Index</h4>
+                  <p class="stat-value text-success" id="safetyScore">92%</p>
+                  <p class="stat-subtitle">Based on active patrols</p>
+                </div>
+              </div>
+              <div class="stat-card panel-glass flex-column">
+                <div class="reporter-header">
+                  <i data-lucide="megaphone" class="text-danger"></i>
+                  <h4>Report Safety Hazard</h4>
+                </div>
+                <div class="reporter-form-row">
+                  <select id="reportType" class="flex-1">
+                    <option value="light">No Street Lights</option>
+                    <option value="crowd">Unsafe Crowd</option>
+                    <option value="other">General Hazard</option>
+                  </select>
+                  <button id="addReportPinBtn" class="btn btn-secondary">Pin Hazard</button>
+                </div>
+              </div>
+            </div>
+          </section>
         </div>
+      </div>
 
-        <!-- Safe Route Planner -->
-        <div class="tool-card">
-          <div class="card-header">
-            <i data-lucide="navigation" class="text-primary"></i>
-            <h3>Safe Route Planner</h3>
-          </div>
-          <div class="form-group">
-            <label for="routeStart">Current Location</label>
-            <div class="input-wrapper">
-              <i data-lucide="map-pin" class="input-icon text-success"></i>
-              <input type="text" id="routeStart" value="Sector 62 (Metro Hub)" placeholder="Enter starting point">
+      <!-- TAB 2: CITIZEN ACADEMY & GAMIFIED QUIZ -->
+      <div id="citizen-academy-tab" class="tab-content hidden">
+        <div class="academy-layout">
+          <!-- Left side: Quizzes & Gamification (Duolingo Style) -->
+          <div class="quiz-container panel-glass">
+            <div class="quiz-header">
+              <div class="streak-badge">
+                <i data-lucide="flame" class="streak-icon animate-pulse text-warning"></i>
+                <span id="citizenStreakText">3 Day Streak!</span>
+              </div>
+              <div class="xp-counter">
+                <i data-lucide="award" class="text-success"></i>
+                <span id="citizenXpText">150 XP</span>
+              </div>
             </div>
-          </div>
-          <div class="form-group">
-            <label for="routeEnd">Destination</label>
-            <div class="input-wrapper">
-              <i data-lucide="flag" class="input-icon text-danger"></i>
-              <input type="text" id="routeEnd" value="Tech Zone Park" placeholder="Enter destination">
-            </div>
-          </div>
-          <button id="calculateRouteBtn" class="btn btn-primary btn-full">
-            <i data-lucide="search"></i>
-            Find Safest Route
-          </button>
-        </div>
-
-        <!-- Fake Call Shield -->
-        <div class="tool-card">
-          <div class="card-header">
-            <i data-lucide="phone-call" class="text-warning"></i>
-            <h3>Fake Call Shield</h3>
-          </div>
-          <p class="tool-desc">Trigger a realistic phone call to exit unsafe/uncomfortable situations.</p>
-          
-          <div class="form-group-row">
-            <div class="form-group flex-1">
-              <label for="callerName">Caller Identity</label>
-              <select id="callerName">
-                <option value="Dad">Dad</option>
-                <option value="Mom">Mom</option>
-                <option value="Brother">Brother</option>
-                <option value="Security Office">Security Office</option>
-              </select>
-            </div>
-            <div class="form-group flex-1">
-              <label for="callDelay">Trigger Delay</label>
-              <select id="callDelay">
-                <option value="3">3 Seconds</option>
-                <option value="5" selected>5 Seconds</option>
-                <option value="15">15 Seconds</option>
-                <option value="30">30 Seconds</option>
-              </select>
-            </div>
-          </div>
-
-          <button id="scheduleCallBtn" class="btn btn-warning btn-full">
-            <i data-lucide="shield-alert"></i>
-            <span id="callBtnText">Activate Call Shield</span>
-          </button>
-        </div>
-
-      </section>
-
-      <!-- Center & Right Panel: Map & Dashboard Data -->
-      <section class="map-and-stats">
-        
-        <!-- Live Map Interface -->
-        <div class="map-card panel-glass">
-          <div class="map-header">
-            <div class="map-title">
-              <i data-lucide="map" class="text-primary"></i>
-              <h3>Tactical Safety Map Dashboard</h3>
-            </div>
-            <div class="map-legends">
-              <span class="legend"><span class="dot safe"></span> Safe (Lighted)</span>
-              <span class="legend"><span class="dot moderate"></span> Caution</span>
-              <span class="legend"><span class="dot dangerous"></span> Unlit/Reported</span>
-            </div>
-          </div>
-
-          <div class="map-viewport" id="mapViewport">
-            <!-- Grid overlays to look tactical -->
-            <div class="tactical-grid"></div>
             
-            <!-- SVG Map Layers: Streets, Safe Zones, Active Paths -->
-            <svg id="mapSvg" viewBox="0 0 800 500" class="map-svg">
-              <!-- Base Street Grid Lines -->
-              <path d="M 50,0 L 50,500" class="street-line" />
-              <path d="M 200,0 L 200,500" class="street-line" />
-              <path d="M 350,0 L 350,500" class="street-line" />
-              <path d="M 500,0 L 500,500" class="street-line" />
-              <path d="M 650,0 L 650,500" class="street-line" />
+            <div class="quiz-box">
+              <div class="quiz-progress">
+                <div class="progress-bar"><div class="progress-fill" id="quizProgressFill" style="width: 25%;"></div></div>
+                <span id="quizIndexText">Question 1 of 4</span>
+              </div>
               
-              <path d="M 0,80 L 800,80" class="street-line" />
-              <path d="M 0,220 L 800,220" class="street-line" />
-              <path d="M 0,360 L 800,360" class="street-line" />
-              
-              <!-- Diagonals / Extra roads -->
-              <path d="M 50,80 L 350,360" class="street-line diagonal" />
-              <path d="M 350,220 L 650,80" class="street-line diagonal" />
-              
-              <!-- Hotspots/Heatmap Circles -->
-              <circle cx="120" cy="150" r="45" class="heatmap-zone hazard" />
-              <circle cx="580" cy="290" r="55" class="heatmap-zone hazard" />
-              <circle cx="280" cy="300" r="60" class="heatmap-zone moderate" />
-              <circle cx="420" cy="110" r="70" class="heatmap-zone safe" />
-              
-              <!-- Safe Haven Safehouses (Green circles) -->
-              <g class="map-node safehouse" data-info="Police Booth & CCTV Station">
-                <circle cx="200" cy="220" r="14" />
-                <circle cx="200" cy="220" r="24" class="ping" />
-                <text x="200" y="225" text-anchor="middle" class="node-icon">👮</text>
-              </g>
-              <g class="map-node safehouse" data-info="24/7 Supermarket (Safe Haven)">
-                <circle cx="500" cy="80" r="14" />
-                <circle cx="500" cy="80" r="24" class="ping" />
-                <text x="500" y="85" text-anchor="middle" class="node-icon">🏪</text>
-              </g>
-              <g class="map-node safehouse" data-info="Active Transit Police Hub">
-                <circle cx="350" cy="360" r="14" />
-                <circle cx="350" cy="360" r="24" class="ping" />
-                <text x="350" y="365" text-anchor="middle" class="node-icon">🚓</text>
-              </g>
+              <div id="citizenQuizContent">
+                <h3 class="quiz-question" id="citizenQuestionText">If you receive an OTP from an unknown number requesting verification for a package delivery, what should you do?</h3>
+                <div class="quiz-options-list" id="citizenOptionsList">
+                  <!-- JS inserts options here -->
+                </div>
+              </div>
 
-              <!-- Starting Point Marker -->
-              <g id="startMarker" class="map-marker hidden">
-                <circle cx="50" cy="80" r="8" class="marker-base success" />
-                <circle cx="50" cy="80" r="18" class="marker-pulse success" />
-                <text x="50" y="60" text-anchor="middle" class="marker-label">START</text>
-              </g>
+              <div id="quizFeedbackArea" class="quiz-feedback hidden">
+                <div class="feedback-message">
+                  <i data-lucide="check-circle-2" class="text-success feedback-icon"></i>
+                  <span id="feedbackMessageText">Correct! Never share OTPs.</span>
+                </div>
+                <button id="nextQuestionBtn" class="btn btn-primary">Continue</button>
+              </div>
+            </div>
+          </div>
 
-              <!-- Ending Point Marker -->
-              <g id="endMarker" class="map-marker hidden">
-                <circle cx="650" cy="360" r="8" class="marker-base danger" />
-                <circle cx="650" cy="360" r="18" class="marker-pulse danger" />
-                <text x="650" y="340" text-anchor="middle" class="marker-label">DEST</text>
-              </g>
-
-              <!-- Dynamic Calculated Path Line -->
-              <path id="calculatedPath" d="" class="dynamic-path-line" />
-              
-              <!-- Live User Location Indicator -->
-              <g id="userLocation" class="user-location-node">
-                <circle cx="50" cy="80" r="6" />
-                <circle cx="50" cy="80" r="16" class="user-ping" />
-              </g>
-
-              <!-- Interactive reported points container -->
-              <g id="reportedPins"></g>
-            </svg>
-
-            <!-- Floating Info Panel / Tooltip -->
-            <div id="mapTooltip" class="map-tooltip hidden">
-              Hover over markers for safe havens or hazards
+          <!-- Right side: Citizens Courses Catalog -->
+          <div class="courses-sidebar panel-glass">
+            <h3>Awareness Courses</h3>
+            <p class="section-desc">Learn your rights & safeguard yourself online.</p>
+            <div class="course-list-grid" id="citizenCoursesList">
+              <!-- Rendered via JS -->
             </div>
           </div>
         </div>
+      </div>
 
-        <!-- Info Grid / Safety Metrics -->
-        <div class="safety-dashboard-grid">
+      <!-- TAB 3: FIR GUIDANCE ASSISTANT -->
+      <div id="citizen-fir-tab" class="tab-content hidden">
+        <div class="fir-assistant-container panel-glass">
+          <div class="fir-header">
+            <div class="assistant-avatar">🤖</div>
+            <div>
+              <h3>UP Citizen FIR Assistant</h3>
+              <p>Step-by-step guidance on filing First Information Reports (FIRs)</p>
+            </div>
+          </div>
           
-          <div class="stat-card panel-glass">
-            <div class="stat-icon-wrapper success">
-              <i data-lucide="shield-check"></i>
-            </div>
-            <div class="stat-details">
-              <h4>Safety Index</h4>
-              <p class="stat-value text-success" id="safetyScore">94%</p>
-              <p class="stat-subtitle">Based on active path attributes</p>
+          <div class="chat-viewport" id="firChatViewport">
+            <!-- Simulated Chat History -->
+            <div class="chat-message bot">
+              Welcome to the UP Police FIR Guide. How can I assist you today? Please choose a topic below to understand the legal procedure.
             </div>
           </div>
 
-          <div class="stat-card panel-glass">
-            <div class="stat-icon-wrapper info">
-              <i data-lucide="eye"></i>
-            </div>
-            <div class="stat-details">
-              <h4>Active Vigilance</h4>
-              <p class="stat-value text-info">12 Guards</p>
-              <p class="stat-subtitle">Patrolling route buffers</p>
-            </div>
+          <div class="chat-options-panel" id="firChatOptions">
+            <button class="chat-opt-btn" data-intent="what_is_fir">What is an FIR?</button>
+            <button class="chat-opt-btn" data-intent="how_to_file">How to file an FIR?</button>
+            <button class="chat-opt-btn" data-intent="zero_fir">What is a Zero FIR?</button>
+            <button class="chat-opt-btn" data-intent="online_fir">Can I file an FIR online?</button>
+            <button class="chat-opt-btn" data-intent="refuse_fir">What if police refuse to file my FIR?</button>
           </div>
+        </div>
+      </div>
 
-          <!-- Report Incident Panel -->
-          <div class="stat-card panel-glass flex-column">
-            <div class="reporter-header">
-              <i data-lucide="megaphone" class="text-danger"></i>
-              <h4>Report Safety Hazard</h4>
-            </div>
-            <div class="reporter-form-row">
-              <select id="reportType" class="flex-1">
-                <option value="light">No Street Lights</option>
-                <option value="crowd">Suspicious Crowd</option>
-                <option value="barrier">Blocked / Isolated Road</option>
-                <option value="other">Other Concern</option>
+    </div>
+
+    <!-- ========================================== -->
+    <!-- POLICE DASHBOARD                           -->
+    <!-- ========================================== -->
+    <div id="policeDashboard" class="dashboard-view hidden">
+      
+      <!-- TAB 1: ACADEMY (IPC/BNS & CYBER CRIME) -->
+      <div id="police-training-tab" class="tab-content">
+        <div class="police-training-grid">
+          
+          <!-- Left sidebar: Rank-wise learning filter & Stats -->
+          <div class="training-filter-panel panel-glass">
+            <h3>Officer Rank Training</h3>
+            <div class="form-group mt-15">
+              <label for="officerRank">Select Current Rank</label>
+              <select id="officerRank">
+                <option value="constable">Constable / Head Constable</option>
+                <option value="si" selected>Sub-Inspector (SI)</option>
+                <option value="inspector">Inspector & Above</option>
               </select>
-              <button id="addReportPinBtn" class="btn btn-secondary">Pin on Map</button>
+            </div>
+            
+            <div class="officer-stats-card">
+              <h4>My Training Progress</h4>
+              <div class="progress-stat">
+                <span>Cyber Forensics</span>
+                <div class="progress-bar"><div class="progress-fill info" style="width: 75%;"></div></div>
+              </div>
+              <div class="progress-stat">
+                <span>IPC to BNS Transition</span>
+                <div class="progress-bar"><div class="progress-fill success" style="width: 90%;"></div></div>
+              </div>
+              <div class="progress-stat">
+                <span>Soft Skills & Behavioral</span>
+                <div class="progress-bar"><div class="progress-fill warning" style="width: 40%;"></div></div>
+              </div>
+            </div>
+          </div>
+
+          <!-- Main training course content -->
+          <div class="training-courses-view panel-glass">
+            <div class="training-header">
+              <h3>Police Internal Training Modules</h3>
+              <p>Certified courses curated for Uttar Pradesh Police officers.</p>
+            </div>
+            <div class="course-list-grid" id="policeCoursesList">
+              <!-- Rendered dynamically -->
             </div>
           </div>
 
         </div>
+      </div>
 
-      </section>
+      <!-- TAB 2: EMERGENCY RESPONSE SIMULATOR -->
+      <div id="police-simulator-tab" class="tab-content hidden">
+        <div class="simulator-layout">
+          
+          <div class="simulator-card panel-glass">
+            <div class="sim-header">
+              <div class="pulse-indicator text-danger"><span class="status-indicator dangerous"></span> SIMULATOR LIVE</div>
+              <h3>Emergency Dispatch Dispatcher</h3>
+            </div>
+            
+            <div class="sim-display" id="simDisplay">
+              <div class="sim-log-msg system">Initiating simulator engine...</div>
+              <div class="sim-log-msg threat">⚠️ EMERGENCY ALERT: Call received from Control Room. A citizen reports a dynamic crowd confrontation near Sector 12 Market. Tensions rising.</div>
+              <div class="sim-log-msg question">As the Duty Officer, what is your immediate directive?</div>
+            </div>
 
-    </main>
+            <div class="sim-choices" id="simChoices">
+              <!-- Options loaded dynamically -->
+            </div>
+          </div>
+
+          <div class="sim-stats-panel panel-glass">
+            <h3>Tactical Dispatch Evaluation</h3>
+            <div class="sim-metrics">
+              <div class="sim-metric-item">
+                <span class="label">Response Time Score</span>
+                <span class="val text-success" id="simResponseScore">100%</span>
+              </div>
+              <div class="sim-metric-item">
+                <span class="label">Citizen Safety Score</span>
+                <span class="val text-success" id="simSafetyScore">100%</span>
+              </div>
+              <div class="sim-metric-item">
+                <span class="label">De-escalation Rating</span>
+                <span class="val text-success" id="simDeescalationScore">100%</span>
+              </div>
+            </div>
+            <button id="resetSimBtn" class="btn btn-secondary btn-full mt-20">Reset Simulation</button>
+          </div>
+
+        </div>
+      </div>
+
+      <!-- TAB 3: FITNESS TRACKER -->
+      <div id="police-fitness-tab" class="tab-content hidden">
+        <div class="fitness-layout dashboard-grid">
+          
+          <!-- Logger form -->
+          <div class="fitness-form-panel panel-glass">
+            <h3>Log Daily Activity</h3>
+            <p class="section-desc">Maintain fitness requirements. Log your daily workout stats below.</p>
+            
+            <div class="form-group">
+              <label for="fitRunning">Running / Cardio (kilometers)</label>
+              <input type="number" id="fitRunning" value="3.5" step="0.1">
+            </div>
+            
+            <div class="form-group">
+              <label for="fitPushups">Push-ups (reps)</label>
+              <input type="number" id="fitPushups" value="30">
+            </div>
+
+            <div class="form-group">
+              <label for="fitHydration">Hydration (liters of water)</label>
+              <input type="number" id="fitHydration" value="2.5" step="0.5">
+            </div>
+
+            <button id="logFitnessBtn" class="btn btn-primary btn-full">
+              <i data-lucide="plus-circle"></i> Update Daily Log
+            </button>
+          </div>
+
+          <!-- Log reports & achievements -->
+          <div class="fitness-stats-view panel-glass">
+            <div class="fit-achievement-header">
+              <i data-lucide="flame" class="text-warning text-large animate-pulse"></i>
+              <div>
+                <h3>UP Police Fitness Status</h3>
+                <p id="fitnessTierText">Tier Level: Combat Ready (Level 4)</p>
+              </div>
+            </div>
+
+            <div class="fit-grid-stats">
+              <div class="fit-stat-card">
+                <span class="title">Cardio Total</span>
+                <span class="val" id="totalCardioText">24.5 km</span>
+                <span class="desc">This week</span>
+              </div>
+              <div class="fit-stat-card">
+                <span class="title">Push-ups Total</span>
+                <span class="val" id="totalPushupsText">210 Reps</span>
+                <span class="desc">This week</span>
+              </div>
+              <div class="fit-stat-card">
+                <span class="title">Weekly Consistency</span>
+                <span class="val text-success">5 / 7 Days</span>
+                <span class="desc">Active tracking</span>
+              </div>
+            </div>
+          </div>
+
+        </div>
+      </div>
+
+    </div>
+
+    <!-- ========================================== -->
+    <!-- ADMIN DASHBOARD                            -->
+    <!-- ========================================== -->
+    <div id="adminDashboard" class="dashboard-view hidden">
+      <div id="admin-course-tab" class="tab-content">
+        <div class="dashboard-grid">
+          
+          <!-- Course Creator Form -->
+          <div class="admin-creator-panel panel-glass">
+            <h3>Create New Training Module</h3>
+            <p class="section-desc">Publish direct educational material for citizens or police training paths.</p>
+            
+            <div class="form-group">
+              <label for="newCourseTitle">Module Title</label>
+              <input type="text" id="newCourseTitle" placeholder="e.g., Whatsapp OTP Scams Guide">
+            </div>
+
+            <div class="form-group">
+              <label for="newCourseAudience">Target Audience</label>
+              <select id="newCourseAudience">
+                <option value="citizen">Citizenry (Awareness)</option>
+                <option value="police">Police Personnel (Internal Training)</option>
+              </select>
+            </div>
+
+            <div class="form-group">
+              <label for="newCourseCategory">Category / Topic</label>
+              <select id="newCourseCategory">
+                <option value="cyber">Cyber Security & Crime</option>
+                <option value="legal">Law & Legal Procedures</option>
+                <option value="behavioral">Behavioral & Soft Skills</option>
+                <option value="safety">Public Safety & Support</option>
+              </select>
+            </div>
+
+            <div class="form-group">
+              <label for="newCourseDesc">Short Description</label>
+              <textarea id="newCourseDesc" rows="4" placeholder="Brief outline of course contents and what users will learn..."></textarea>
+            </div>
+
+            <button id="addCourseBtn" class="btn btn-primary btn-full">
+              <i data-lucide="plus"></i> Publish Module
+            </button>
+          </div>
+
+          <!-- Global Platform Analytics -->
+          <div class="admin-analytics-view panel-glass">
+            <h3>Platform Operational Status</h3>
+            <p class="section-desc">Real-time usage and course completion statistics across Uttar Pradesh.</p>
+            
+            <div class="analytics-metrics-grid">
+              <div class="analytics-card">
+                <span class="metric-num text-success">1,24,082</span>
+                <span class="metric-label">Registered Citizens</span>
+              </div>
+              <div class="analytics-card">
+                <span class="metric-num text-info">18,495</span>
+                <span class="metric-label">Active Police Enrolled</span>
+              </div>
+              <div class="analytics-card">
+                <span class="metric-num text-warning">86.4%</span>
+                <span class="metric-label">Avg Quiz Pass Rate</span>
+              </div>
+              <div class="analytics-card">
+                <span class="metric-num text-danger">412</span>
+                <span class="metric-label">SOS Dispatches Today</span>
+              </div>
+            </div>
+
+            <div class="analytics-table-container">
+              <h4>Live Feed Analytics</h4>
+              <table class="analytics-table">
+                <thead>
+                  <tr>
+                    <th>Event Description</th>
+                    <th>Actor Type</th>
+                    <th>Status</th>
+                    <th>Timestamp</th>
+                  </tr>
+                </thead>
+                <tbody id="analyticsTableBody">
+                  <tr>
+                    <td>Completed Cyber Fraud quiz</td>
+                    <td>Citizen</td>
+                    <td><span class="status-badge success">Awarded +50XP</span></td>
+                    <td>Just now</td>
+                  </tr>
+                  <tr>
+                    <td>Completed IPC to BNS Transition Module</td>
+                    <td>Police Officer</td>
+                    <td><span class="status-badge info">Certified</span></td>
+                    <td>2 mins ago</td>
+                  </tr>
+                  <tr>
+                    <td>Triggered Emergency SOS - GPS Broadcasted</td>
+                    <td>Citizen</td>
+                    <td><span class="status-badge danger">Resolved</span></td>
+                    <td>12 mins ago</td>
+                  </tr>
+                </tbody>
+              </table>
+            </div>
+          </div>
+
+        </div>
+      </div>
+    </div>
+
   </div>
 
   <script src="app.js"></script>
