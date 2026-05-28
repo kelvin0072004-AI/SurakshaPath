@@ -7,7 +7,7 @@ document.addEventListener('DOMContentLoaded', () => {
   // ==========================================
   // SUPABASE CONFIGURATION (Replace with your actual keys)
   // ==========================================
-  const SUPABASE_URL = 'https://your-actual-project-id.supabase.co';
+  const SUPABASE_URL = 'https://qifcuziltteolhvymtdo.supabase.co';
   const SUPABASE_ANON_KEY = 'sb_publishable_rSbnWhS0LTvtVm7vKoUNqg_4ScFYHOs';
 
 
