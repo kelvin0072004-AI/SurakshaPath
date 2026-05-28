@@ -7,9 +7,10 @@ document.addEventListener('DOMContentLoaded', () => {
   // ==========================================
   // SUPABASE CONFIGURATION (Replace with your actual keys)
   // ==========================================
-  const SUPABASE_URL = 'https://YOUR_PROJECT_ID.supabase.co';
-  const SUPABASE_ANON_KEY = 'YOUR_ANON_PUBLIC_KEY';
-  
+  const SUPABASE_URL = 'https://your-actual-project-id.supabase.co';
+  const SUPABASE_ANON_KEY = 'sb_publishable_rSbnWhS0LTvtVm7vKoUNqg_4ScFYHOs';
+
+
   let supabase = null;
   if (window.supabase) {
     supabase = window.supabase.createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
@@ -186,7 +187,7 @@ document.addEventListener('DOMContentLoaded', () => {
     if (freqs.length > 1) {
       osc.frequency.exponentialRampToValueAtTime(freqs[1], audioContext.currentTime + duration);
     }
-    
+
     gainNode.gain.setValueAtTime(gainVal, audioContext.currentTime);
     gainNode.gain.exponentialRampToValueAtTime(0.001, audioContext.currentTime + duration);
 
@@ -258,7 +259,7 @@ document.addEventListener('DOMContentLoaded', () => {
   }
 
   function stopActiveNodes(nodes) {
-    nodes.forEach(n => { try { n.stop(); } catch(e) {} });
+    nodes.forEach(n => { try { n.stop(); } catch (e) { } });
   }
 
   // ==========================================
@@ -484,7 +485,7 @@ document.addEventListener('DOMContentLoaded', () => {
         document.getElementById('signUpForm').reset();
         successEl.classList.add('hidden');
         tabSignIn.click();
-        
+
         document.getElementById('loginEmail').value = email;
         document.getElementById('loginPassword').value = '';
         document.getElementById('loginPassword').focus();
@@ -545,7 +546,7 @@ document.addEventListener('DOMContentLoaded', () => {
         { id: 'admin-course-tab', label: 'Publish Center', icon: 'plus-circle' }
       ]);
     }
-    
+
     lucide.createIcons();
   }
 
@@ -566,7 +567,7 @@ document.addEventListener('DOMContentLoaded', () => {
       btn.className = `tab-btn ${index === 0 ? 'active' : ''}`;
       btn.setAttribute('data-target', tab.id);
       btn.innerHTML = `<i data-lucide="${tab.icon}"></i> ${tab.label}`;
-      
+
       btn.addEventListener('click', () => {
         // Toggle tab active button
         document.querySelectorAll('.tab-btn').forEach(b => b.classList.remove('active'));
@@ -575,17 +576,17 @@ document.addEventListener('DOMContentLoaded', () => {
         // Toggle corresponding content view
         document.querySelectorAll('.tab-content').forEach(tc => tc.classList.add('hidden'));
         document.getElementById(tab.id).classList.remove('hidden');
-        
+
         playSynthSound([600], 'sine', 0.05, 0.05);
       });
 
       navTabsContainer.appendChild(btn);
     });
-    
+
     // Set first tab active
     document.querySelectorAll('.tab-content').forEach(tc => tc.classList.add('hidden'));
     document.getElementById(tabsConfig[0].id).classList.remove('hidden');
-    
+
     activeTabId = tabsConfig[0].id;
   }
 
@@ -628,12 +629,12 @@ document.addEventListener('DOMContentLoaded', () => {
   function renderCitizenQuiz() {
     const qCount = citizenQuizQuestions.length;
     const currentQ = citizenQuizQuestions[currentQuizIndex];
-    
+
     // Update progress elements
     quizProgressFill.style.width = `${((currentQuizIndex + 1) / qCount) * 100}%`;
     quizIndexText.textContent = `Question ${currentQuizIndex + 1} of ${qCount}`;
     citizenQuestionText.textContent = currentQ.q;
-    
+
     citizenOptionsList.innerHTML = '';
     quizFeedbackArea.classList.add('hidden');
 
@@ -641,19 +642,19 @@ document.addEventListener('DOMContentLoaded', () => {
       const optBtn = document.createElement('button');
       optBtn.className = 'quiz-opt-btn';
       optBtn.textContent = opt;
-      
+
       optBtn.addEventListener('click', () => {
         // Disable all options after select
         document.querySelectorAll('.quiz-opt-btn').forEach(btn => btn.disabled = true);
-        
+
         if (idx === currentQ.correct) {
           optBtn.classList.add('correct');
           feedbackMessageText.textContent = currentQ.explanation;
           feedbackMessageText.parentElement.querySelector('i').className = 'text-success feedback-icon';
           feedbackMessageText.parentElement.querySelector('i').setAttribute('data-lucide', 'check-circle-2');
-          
+
           playSuccessBeep();
-          
+
           // Boost XP
           citizenXp += 20;
           document.getElementById('citizenXpText').textContent = `${citizenXp} XP`;
@@ -663,10 +664,10 @@ document.addEventListener('DOMContentLoaded', () => {
           feedbackMessageText.textContent = `Incorrect! The correct answer was: "${currentQ.options[currentQ.correct]}"`;
           feedbackMessageText.parentElement.querySelector('i').className = 'text-danger feedback-icon';
           feedbackMessageText.parentElement.querySelector('i').setAttribute('data-lucide', 'x-circle');
-          
+
           playFailBuzz();
         }
-        
+
         lucide.createIcons();
         quizFeedbackArea.classList.remove('hidden');
       });
@@ -693,7 +694,7 @@ document.addEventListener('DOMContentLoaded', () => {
   // CITIZEN FIR ASSISTANT CHAT
   // ==========================================
   const firChatViewport = document.getElementById('firChatViewport');
-  
+
   const firResponses = {
     what_is_fir: "A First Information Report (FIR) is a written document prepared by police organizations when they receive information about the commission of a cognizable offence. It starts the criminal justice system process.",
     how_to_file: "1. Visit the closest police station.\n2. Detail the incident orally or in writing to the Duty Officer.\n3. Verify your report, sign it, and ensure you receive a free copy of the FIR on the spot (it is your legal right).",
@@ -729,7 +730,7 @@ document.addEventListener('DOMContentLoaded', () => {
     bubble.className = `chat-message ${sender}`;
     bubble.innerHTML = text.replace(/\n/g, '<br>');
     firChatViewport.appendChild(bubble);
-    
+
     // Auto Scroll to bottom
     firChatViewport.scrollTop = firChatViewport.scrollHeight;
   }
@@ -738,14 +739,14 @@ document.addEventListener('DOMContentLoaded', () => {
   // POLICE TRAINING CATALOG
   // ==========================================
   const officerRankSelect = document.getElementById('officerRank');
-  
+
   function renderPoliceCourses() {
     const list = document.getElementById('policeCoursesList');
     if (!list) return;
     list.innerHTML = '';
-    
+
     const activeRank = officerRankSelect.value;
-    
+
     // Filter courses based on rank selection
     const filtered = policeCourses.filter(c => c.rank === 'all' || c.rank === activeRank);
 
@@ -777,7 +778,7 @@ document.addEventListener('DOMContentLoaded', () => {
   // ==========================================
   const simDisplay = document.getElementById('simDisplay');
   const simChoices = document.getElementById('simChoices');
-  
+
   let simStage = 0;
   let metrics = { response: 100, safety: 100, deescalation: 100 };
 
@@ -831,9 +832,9 @@ document.addEventListener('DOMContentLoaded', () => {
   function renderSimStage() {
     const stage = simScenarios[simStage];
     appendSimLog(stage.text, 'threat');
-    
+
     simChoices.innerHTML = '';
-    
+
     if (stage.options.length === 0) {
       appendSimLog("System assessment complete. Press Reset to try again.", 'system');
       return;
@@ -845,7 +846,7 @@ document.addEventListener('DOMContentLoaded', () => {
       const btn = document.createElement('button');
       btn.className = 'sim-opt-btn';
       btn.textContent = opt.text;
-      
+
       btn.addEventListener('click', () => {
         // Log action chosen
         appendSimLog(`Choice: "${opt.text}"`, 'action');
@@ -903,14 +904,14 @@ document.addEventListener('DOMContentLoaded', () => {
   // POLICE FITNESS TRACKER
   // ==========================================
   const logFitnessBtn = document.getElementById('logFitnessBtn');
-  
+
   if (logFitnessBtn) {
     logFitnessBtn.addEventListener('click', () => {
       const runningInput = parseFloat(document.getElementById('fitRunning').value) || 0;
       const pushupsInput = parseInt(document.getElementById('fitPushups').value) || 0;
-      
+
       playSynthSound([520, 640], 'sine', 0.25, 0.1);
-      
+
       // Update totals
       totalCardio = parseFloat((totalCardio + runningInput).toFixed(1));
       totalPushups += pushupsInput;
@@ -1006,7 +1007,7 @@ document.addEventListener('DOMContentLoaded', () => {
       const selectedPath = safePaths[Math.floor(Math.random() * safePaths.length)];
       calculatedPath.classList.remove('animate-draw');
       calculatedPath.setAttribute('d', selectedPath);
-      
+
       void calculatedPath.offsetWidth; // Trigger reflow
       calculatedPath.classList.add('animate-draw');
 
@@ -1085,10 +1086,10 @@ document.addEventListener('DOMContentLoaded', () => {
         scheduleCallBtn.className = "btn btn-warning btn-full";
         return;
       }
-      
+
       const delay = parseInt(document.getElementById('callDelay').value);
       playSynthSound([520], 'sine', 0.15, 0.1);
-      
+
       let timeLeft = delay;
       scheduleCallBtn.textContent = `Call in ${timeLeft}s...`;
       scheduleCallBtn.className = "btn btn-secondary btn-full";
@@ -1099,7 +1100,7 @@ document.addEventListener('DOMContentLoaded', () => {
           countdownTimer = null;
           scheduleCallBtn.textContent = "Schedule Fake Call";
           scheduleCallBtn.className = "btn btn-warning btn-full";
-          
+
           callerNameText.textContent = document.getElementById('callerName').value;
           fakeCallOverlay.classList.remove('hidden');
           startRingtone();
@@ -1120,7 +1121,7 @@ document.addEventListener('DOMContentLoaded', () => {
   acceptCallBtn.addEventListener('click', () => {
     stopRingtone();
     activeCallScreen.classList.remove('hidden');
-    
+
     let sec = 0;
     callTimer.textContent = "00:00";
     callTimerInterval = setInterval(() => {
@@ -1140,7 +1141,7 @@ document.addEventListener('DOMContentLoaded', () => {
   // Pin hazards
   const addReportPinBtn = document.getElementById('addReportPinBtn');
   const reportedPins = document.getElementById('reportedPins');
-  
+
   if (addReportPinBtn) {
     addReportPinBtn.addEventListener('click', () => {
       const rx = Math.floor(Math.random() * 650) + 70;
@@ -1151,7 +1152,7 @@ document.addEventListener('DOMContentLoaded', () => {
       const g = document.createElementNS("http://www.w3.org/2000/svg", "g");
       g.setAttribute("class", "reported-pin");
       g.setAttribute("data-info", hazardType === 'light' ? 'Unlit Area' : 'Suspicious Gathering');
-      
+
       g.innerHTML = `
         <circle cx="${rx}" cy="${ry}" r="8" />
         <text x="${rx}" y="${ry - 12}" text-anchor="middle">${icon}</text>
