@@ -360,11 +360,34 @@ document.addEventListener('DOMContentLoaded', () => {
     handleSignIn('admin@surakshapath.in', 'password123', 'admin');
   });
 
-  function handleSignIn(email, password, role) {
-    const users = getUsers();
-    const user = users.find(u => u.email.toLowerCase() === email.toLowerCase() && u.password === password);
+  async function handleSignIn(email, password, role) {
     const errorEl = document.getElementById('loginErrorMsg');
     errorEl.classList.add('hidden');
+
+    let user = null;
+
+    // Supabase Fallback Check
+    if (supabase && SUPABASE_URL !== 'https://YOUR_PROJECT_ID.supabase.co') {
+      try {
+        const { data, error } = await supabase
+          .from('users')
+          .select('*')
+          .eq('email', email.toLowerCase())
+          .eq('password', password)
+          .maybeSingle();
+
+        if (error) throw error;
+        user = data;
+      } catch (err) {
+        console.error("Supabase signin error, using local storage fallback:", err);
+      }
+    }
+
+    // Local Storage Fallback
+    if (!user) {
+      const users = getUsers();
+      user = users.find(u => u.email.toLowerCase() === email.toLowerCase() && u.password === password);
+    }
 
     if (!user) {
       playFailBuzz();
@@ -385,15 +408,15 @@ document.addEventListener('DOMContentLoaded', () => {
   }
 
   // Form submit for sign in
-  document.getElementById('signInForm').addEventListener('submit', (e) => {
+  document.getElementById('signInForm').addEventListener('submit', async (e) => {
     e.preventDefault();
     const email = document.getElementById('loginEmail').value.trim();
     const password = document.getElementById('loginPassword').value;
-    handleSignIn(email, password, loginRole);
+    await handleSignIn(email, password, loginRole);
   });
 
   // Form submit for sign up
-  document.getElementById('signUpForm').addEventListener('submit', (e) => {
+  document.getElementById('signUpForm').addEventListener('submit', async (e) => {
     e.preventDefault();
     const name = document.getElementById('signupName').value.trim();
     const email = document.getElementById('signupEmail').value.trim();
@@ -404,38 +427,74 @@ document.addEventListener('DOMContentLoaded', () => {
     errorEl.classList.add('hidden');
     successEl.classList.add('hidden');
 
-    const users = getUsers();
-    const existing = users.find(u => u.email.toLowerCase() === email.toLowerCase());
-    if (existing) {
-      playFailBuzz();
-      errorEl.textContent = '❌ An account with this email already exists.';
-      errorEl.classList.remove('hidden');
-      return;
+    let signupSuccess = false;
+
+    // Supabase Fallback Check
+    if (supabase && SUPABASE_URL !== 'https://YOUR_PROJECT_ID.supabase.co') {
+      try {
+        const { data: existingUser, error: checkError } = await supabase
+          .from('users')
+          .select('email')
+          .eq('email', email.toLowerCase())
+          .maybeSingle();
+
+        if (checkError) throw checkError;
+
+        if (existingUser) {
+          playFailBuzz();
+          errorEl.textContent = '❌ An account with this email already exists on Supabase.';
+          errorEl.classList.remove('hidden');
+          return;
+        }
+
+        const { error: insertError } = await supabase
+          .from('users')
+          .insert([{ name, email, password, role: signupRole }]);
+
+        if (insertError) throw insertError;
+        signupSuccess = true;
+        console.log("Registered successfully on Supabase.");
+      } catch (err) {
+        console.error("Supabase signup error, using local storage fallback:", err);
+      }
     }
 
-    // Save new user
-    const newUser = { name, email, password, role: signupRole };
-    saveUser(newUser);
+    // Local Storage Fallback if not completed by Supabase
+    if (!signupSuccess) {
+      const users = getUsers();
+      const existing = users.find(u => u.email.toLowerCase() === email.toLowerCase());
+      if (existing) {
+        playFailBuzz();
+        errorEl.textContent = '❌ An account with this email already exists.';
+        errorEl.classList.remove('hidden');
+        return;
+      }
 
-    playSuccessBeep();
-    successEl.textContent = '🎉 Account created successfully! Redirecting to Sign In...';
-    successEl.classList.remove('hidden');
+      const newUser = { name, email, password, role: signupRole };
+      saveUser(newUser);
+      signupSuccess = true;
+    }
 
-    // Switch tab after short delay
-    setTimeout(() => {
-      document.getElementById('signUpForm').reset();
-      successEl.classList.add('hidden');
-      tabSignIn.click();
-      
-      document.getElementById('loginEmail').value = email;
-      document.getElementById('loginPassword').value = '';
-      document.getElementById('loginPassword').focus();
+    if (signupSuccess) {
+      playSuccessBeep();
+      successEl.textContent = '🎉 Account created successfully! Redirecting to Sign In...';
+      successEl.classList.remove('hidden');
 
-      document.querySelectorAll('[data-auth-role]').forEach(c => c.classList.remove('active'));
-      const card = document.querySelector(`[data-auth-role="${signupRole}"]`);
-      if (card) card.classList.add('active');
-      loginRole = signupRole;
-    }, 1500);
+      setTimeout(() => {
+        document.getElementById('signUpForm').reset();
+        successEl.classList.add('hidden');
+        tabSignIn.click();
+        
+        document.getElementById('loginEmail').value = email;
+        document.getElementById('loginPassword').value = '';
+        document.getElementById('loginPassword').focus();
+
+        document.querySelectorAll('[data-auth-role]').forEach(c => c.classList.remove('active'));
+        const card = document.querySelector(`[data-auth-role="${signupRole}"]`);
+        if (card) card.classList.add('active');
+        loginRole = signupRole;
+      }, 1500);
+    }
   });
 
   function login(role, userName = '') {
