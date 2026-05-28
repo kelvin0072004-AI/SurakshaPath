@@ -5,6 +5,20 @@ document.addEventListener('DOMContentLoaded', () => {
   lucide.createIcons();
 
   // ==========================================
+  // SUPABASE CONFIGURATION (Replace with your actual keys)
+  // ==========================================
+  const SUPABASE_URL = 'https://YOUR_PROJECT_ID.supabase.co';
+  const SUPABASE_ANON_KEY = 'YOUR_ANON_PUBLIC_KEY';
+  
+  let supabase = null;
+  if (window.supabase) {
+    supabase = window.supabase.createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
+    console.log("Supabase Client Initialized successfully.");
+  } else {
+    console.warn("Supabase script not loaded or offline. Falling back to local storage.");
+  }
+
+  // ==========================================
   // STATE MANAGEMENT
   // ==========================================
   let currentRole = null;       // 'citizen', 'police', or 'admin'
