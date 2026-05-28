@@ -8,7 +8,7 @@ document.addEventListener('DOMContentLoaded', () => {
   // SUPABASE CONFIGURATION (Replace with your actual keys)
   // ==========================================
   const SUPABASE_URL = 'https://qifcuziltteolhvymtdo.supabase.co';
-  const SUPABASE_ANON_KEY = 'sb_publishable_rSbnWhS0LTvtVm7vKoUNqg_4ScFYHOs';
+  const SUPABASE_ANON_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InFpZmN1emlsdHRlb2xodnltdGRvIiwicm9sZSI6ImFub24iLCJpYXQiOjE3Nzg4Mzg0MjQsImV4cCI6MjA5NDQxNDQyNH0.l8R-fRHpmmQx-t3PGbL8xLNxbAr6ALiSDuT3MPvejwM';
 
 
   let supabase = null;
